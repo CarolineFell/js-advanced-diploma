@@ -4,6 +4,7 @@
   "description": "ajs-diploma",
   "main": "index.js",
   "dependencies": {
+    "@babel/preset-env": "^7.8.7",
     "babel-jest": "^25.1.0",
     "core-js": "^3.6.4",
     "jest": "^25.1.0"
@@ -21,13 +22,16 @@
     "webpack-dev-server": "^3.10.3"
   },
   "scripts": {
-    "test": "jest --coverage",
-    "build": "webpack --module production",
+    "start": "http-server ./dist/",
+    "dev": "webpack-dev-server",
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "build": "webpack --mode production",
     "lint": "eslint ."
   },
   "repository": {
     "type": "git",
-    "url": "\u001b[2~\u0016\u001b[2~https://github.com/CarolineFell/js-advanced-diploma"
+    "url": "git+https://github.com/CarolineFell/js-advanced-diploma.git"
   },
   "keywords": [
     "diploma"
