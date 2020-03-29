@@ -5,30 +5,22 @@ export function calcTileType(index, boardSize) {
   const bottomRight = boardSize ** 2 - 1; // 4 ** 2 - 1 = 15
 
   // boardSize = 4 --> (4x4)
-  // 0  1  2  3 
+  // 0  1  2  3
   // 4  5  6  7
   // 8  9  10 11
   // 12 13 14 15
 
-  if (index === topLeft) {
-    return 'top-left';
-  } else if (index === topRight) {
-    return 'top-right';
-  } else if (index === bottomLeft) {
-    return 'bottom-left';
-  } else if (index === bottomRight) {
-    return 'bottom-right';
-  } else if (index > topLeft && index < topRight) { // 1 || 2
-    return 'top';
-  } else if (index > bottomLeft && index < bottomRight) { // 13 || 14
-    return 'bottom';
-  } else if (index % boardSize === 0) { // 4 % 4 === 0 || 8 % 4 === 0
-    return 'left';
-  } else if ((index + 1) % boardSize === 0) { // (7 + 1) % 4 === 0 || (11 + 1) % 4 === 0
-    return 'right';
-  } else { // 5 || 6 || 9 || 10
-    return 'center';
-  }
+  if (index === topLeft) return 'top-left';
+  if (index === topRight) return 'top-right';
+  if (index === bottomLeft) return 'bottom-left';
+  if (index === bottomRight) return 'bottom-right';
+  if (index > topLeft && index < topRight) return 'top'; // 1 || 2
+  if (index > bottomLeft && index < bottomRight) return 'bottom'; // 13 || 14
+  if (index % boardSize === 0) return 'left'; // 4 % 4 === 0 || 8 % 4 === 0
+  if ((index + 1) % boardSize === 0) return 'right'; // (7 + 1) % 4 === 0 || (11 + 1) % 4 === 0
+
+  // 5 || 6 || 9 || 10
+  return 'center';
 }
 
 export function calcHealthLevel(health) {
@@ -41,4 +33,52 @@ export function calcHealthLevel(health) {
   }
 
   return 'high';
+}
+
+export function shuffle(arr) {
+  let j;
+  let temp;
+
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = arr[j];
+    // eslint-disable-next-line no-param-reassign
+    arr[j] = arr[i];
+    // eslint-disable-next-line no-param-reassign
+    arr[i] = temp;
+  }
+
+  return arr;
+}
+
+export function calcActionPositions(position, radius, boardSize) {
+  const board = [];
+  for (let i = 0; i < boardSize; i += 1) {
+    board[i] = [];
+    for (let j = 0; j < boardSize; j += 1) {
+      board[i][j] = i * boardSize + j;
+    }
+  }
+
+  const I = (position < boardSize) ? 0 : Math.floor(position / boardSize);
+  const J = (position < boardSize) ? position : position % boardSize;
+
+  const actionPositions = [];
+  for (let R = 1; R <= radius; R += 1) {
+    if ((I - R >= 0) && (J - R >= 0)) actionPositions.push(board[I - R][J - R]); // top-left
+    if (I - R >= 0) actionPositions.push(board[I - R][J]); // top
+    if ((I - R >= 0) && (J + R < boardSize)) actionPositions.push(board[I - R][J + R]); // top-right
+    if (J - R >= 0) actionPositions.push(board[I][J - R]); // left
+    if (J + R < boardSize) actionPositions.push(board[I][J + R]); // right
+    if ((I + R < boardSize) && (J - R >= 0)) actionPositions.push(board[I + R][J - R]); // bottom-left
+    if (I + R < boardSize) actionPositions.push(board[I + R][J]); // bottom
+    if ((I + R < boardSize) && (J + R < boardSize)) actionPositions.push(board[I + R][J + R]); // bottom-right
+  }
+
+  return actionPositions;
+}
+
+export function randomItem(arr) {
+  const randomIndex = Math.round(Math.random() * (arr.length - 1));
+  return arr[randomIndex];
 }
